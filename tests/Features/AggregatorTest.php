@@ -286,7 +286,7 @@ final class AggregatorTest extends TestCase
 
         config(['scout.queue' => true]);
         $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
-        $threads->delete();
+        Thread::destroy($threads->pluck('id'));
         $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
         config(['scout.queue' => false]);
 
