@@ -286,7 +286,7 @@ final class AggregatorTest extends TestCase
 
         config(['scout.queue' => true]);
         $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
-        Wall::unsearchable();
+        (new \App\Wall)->unsearchable();
         $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
         config(['scout.queue' => false]);
 
