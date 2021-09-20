@@ -12,8 +12,10 @@ use App\Post;
 use App\Thread;
 use App\User;
 use App\Wall;
+use Illuminate\Contracts\Queue\Queue;
 use Mockery;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertCount;
 
 final class AggregatorTest extends TestCase
 {
@@ -266,5 +268,23 @@ final class AggregatorTest extends TestCase
         ]);
 
         $user->delete();
+    }
+
+    public function testUnsearchableIsNotQueued(): void
+    {
+        Wall::bootSearchable();
+
+        $threadIndexMock = $this->mockIndex(Thread::class);
+        $wallIndexMock = $this->mockIndex('wall');
+
+        $threadIndexMock->shouldReceive('saveObjects')->times(2);
+        $wallIndexMock->shouldReceive('saveObjects')->times(2);
+
+        $threads = factory(Thread::class, 2)->create();
+
+        $this->assertEquals(0, Queue::size($threads->first()->syncWithSearchUsingQueue()));
+        $threads->unsearchable();
+        $this->assertEquals(0, Queue::size($threads->first()->syncWithSearchUsingQueue()));
+
     }
 }
