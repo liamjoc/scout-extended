@@ -282,6 +282,9 @@ final class AggregatorTest extends TestCase
 
         $threads = factory(Thread::class, 2)->create();
 
+        $threadIndexMock->shouldReceive('deleteBy')->once();
+        $wallIndexMock->shouldReceive('deleteBy')->once();
+
         config(['scout.queue' => true]);
         $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
         $threads->unsearchable();
