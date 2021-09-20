@@ -282,9 +282,11 @@ final class AggregatorTest extends TestCase
 
         $threads = factory(Thread::class, 2)->create();
 
-        $this->assertEquals(0, Queue::size($threads->first()->syncWithSearchUsingQueue()));
+        config(['scout.queue' => true]);
+        $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
         $threads->unsearchable();
-        $this->assertEquals(0, Queue::size($threads->first()->syncWithSearchUsingQueue()));
+        $this->assertEquals(0, app(Queue::class)->size($threads->first()->syncWithSearchUsingQueue()));
+        config(['scout.queue' => false]);
 
     }
 }
