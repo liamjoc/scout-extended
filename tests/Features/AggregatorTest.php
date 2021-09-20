@@ -282,7 +282,6 @@ final class AggregatorTest extends TestCase
 
         $threads = factory(Thread::class, 2)->create();
 
-        $threadIndexMock->shouldReceive('deleteBy')->once();
         $wallIndexMock->shouldReceive('deleteBy')->once();
 
         config(['scout.queue' => true]);
