@@ -94,6 +94,10 @@ final class UpdateJob
         if ($this->searchables->isEmpty()) {
             return;
         }
+        
+        if (!empty($this->searchables->first()->makeAllSearchableWith) && is_array($this->searchables->first()->makeAllSearchableWith)) {
+            $this->searchables->load($this->searchables->first()->makeAllSearchableWith);
+        }
 
         if (config('scout.soft_delete', false) && $this->usesSoftDelete($this->searchables->first())) {
             $this->searchables->each->pushSoftDeleteMetadata();
